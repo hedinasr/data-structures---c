@@ -15,7 +15,7 @@
 #ifndef _SKIP_LIST
 #define _SKIP_LIST
 
-#include "object.h"
+#include "../utils/object.h"
 
 /**
  * \struct Cellule

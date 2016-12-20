@@ -1,7 +1,7 @@
 CC = gcc
 CFLAGS = -Wall -pedantic -ggdb
-EXEC_NAME = sl.exe
-OBJ_FILES = skip_list.o ../utils/object.o main.o
+EXEC_NAME = array.exe
+OBJ_FILES = array.o ../utils/object.o main.o
 
 all: $(EXEC_NAME)
 
