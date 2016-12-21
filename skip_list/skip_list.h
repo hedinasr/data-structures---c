@@ -22,7 +22,7 @@
  * \brief Structure Cellule (entitée de la liste)
  */
 typedef struct Cellule {
-  Object info;             /*!< Information contenue dans la Cellule */
+  Object data;             /*!< Datarmation contenue dans la Cellule */
   struct Cellule *suivant; /*!< Pointeur sur la Cellule suivante */
   struct Cellule *dessous; /*!< Pointeur sur la Cellule d'en dessous */
 } Cellule;

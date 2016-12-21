@@ -1,138 +1,128 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "ElementA.h"
-#include "Arbre.h"
+#include "tree.h"
 
-void initialiserArbre(Arbre * A)
+void 
+init(Tree * A)
 {
-  A->adRacine = NULL;
-  A->nbElemDansArbre = 0;
+	A->root = NULL;
+	A->size = 0;
 }
 
-/* =============FONCTIONS RECURSIVE============= */
-static void insererElementApartirDeNoeud(ElementA e, Noeud **c)
+static void 
+insererintpartirDeNode(int e, Node ** c)
 {
-  
-  if(*c == NULL)
-    {
-      *c = (Noeud *)malloc(sizeof(Noeud));
-      (*c)->info = e;
-      (*c)->fg = NULL;
-      (*c)->fd = NULL;
-    }
-  else
-    {
-      if(e != (*c)->info)
-	{
-	  if((*c)->info < e)
-	    {
-	      insererElementApartirDeNoeud(e,&(*c)->fd);
-	    }
-	  else
-	    {
-	      insererElementApartirDeNoeud(e,&(*c)->fg);
-	    }
+
+	if (*c == NULL) {
+		*c = (Node *) malloc(sizeof(Node));
+		(*c)->data = e;
+		(*c)->left = NULL;
+		(*c)->right = NULL;
+	} else {
+		if (e != (*c)->data) {
+			if ((*c)->data < e) {
+				insererintpartirDeNode(e, &(*c)->right);
+			} else {
+				insererintpartirDeNode(e, &(*c)->left);
+			}
+		}
 	}
-    }
 }
 
-static void afficherArbreApartirDeNoeud(const Noeud * c)
+static void 
+afficherTreeApartirDeNode(const Node * c)
 {
-  if(c!=NULL)
-    {
-      afficherArbreApartirDeNoeud(c->fg);
-      afficherElementA(c->info);
-      afficherArbreApartirDeNoeud(c->fd);
-    }
-}
-
-static void rechercherElementApartirDeNoeud(ElementA e, const Noeud *c, int *trouve, int *nb_visites)
-{
-  *trouve = -1;
-  *nb_visites = 0;
-  if(c != NULL)
-    {
-      if(e == c->info)
-	{
-	  *trouve = 1;
-	  (*nb_visites)++;
+	if (c != NULL) {
+		afficherTreeApartirDeNode(c->left);
+    printf("%d ", c->data);
+		afficherTreeApartirDeNode(c->right);
 	}
-      else
-	{
-	  if(e<c->info)
-	    {
-	      rechercherElementApartirDeNoeud(e,c->fg,trouve,nb_visites);
-	      (*nb_visites)++;
-	    }
-	  else
-	    {
-	      rechercherElementApartirDeNoeud(e,c->fd,trouve,nb_visites);    
-	      (*nb_visites)++;
-	    }
+}
+
+static void 
+rechercherintpartirDeNode(int e, const Node * c, int *trouve, int *nb_visites)
+{
+	*trouve = -1;
+	*nb_visites = 0;
+	if (c != NULL) {
+		if (e == c->data) {
+			*trouve = 1;
+			(*nb_visites)++;
+		} else {
+			if (e < c->data) {
+				rechercherintpartirDeNode(e, c->left, trouve, nb_visites);
+				(*nb_visites)++;
+			} else {
+				rechercherintpartirDeNode(e, c->right, trouve, nb_visites);
+				(*nb_visites)++;
+			}
+		}
 	}
-    }
 }
 
-static void viderApartirDeNoeud(Noeud *c)
+static void 
+viderApartirDeNode(Node * c)
 {
-  if(c != NULL)
-    {
-      viderApartirDeNoeud(c->fg);
-      viderApartirDeNoeud(c->fd);
-      free(c);
-    }
+	if (c != NULL) {
+		viderApartirDeNode(c->left);
+		viderApartirDeNode(c->right);
+		free(c);
+	}
 }
 
-static int hauteurApartirDeNoeud(Noeud *c)
+static int 
+hauteurApartirDeNode(Node * c)
 {
-  int hd,hg;
-  if(c == NULL) return -1;
-  hd = hauteurApartirDeNoeud(c->fd);
-  hg = hauteurApartirDeNoeud(c->fg);
-  if(hd>hg) return hd+1;
-  return hg+1;
+	int		hd        , hg;
+	if (c == NULL)
+		return -1;
+	hd = hauteurApartirDeNode(c->right);
+	hg = hauteurApartirDeNode(c->left);
+	if (hd > hg)
+		return hd + 1;
+	return hg + 1;
 }
 
-/* =============FONCTIONS RECURSIVE============= */
- 
-void insererElementArbre(ElementA e, Arbre *A)
-/* Precondition : *A est un arbre binaire de recherche initialise
-   Postcondition : si e n'existait pas deja dans l'arbre *A, alors
-   un nouveau noeud contenant e est insere aux feuilles de *A. 
-   Si au contraire e existait deja dans l'arbre, alors l'arbre est
-   inchange. */
+void 
+insert(int e, Tree * A)
 {
-  insererElementApartirDeNoeud(e,&A->adRacine);
-      A->nbElemDansArbre++;
+	insererintpartirDeNode(e, &A->root);
+	A->size++;
 }
 
-void afficherArbreParcoursInfixe(const Arbre * A)
+void 
+afficherTreeParcoursInfixe(const Tree * A)
 {
-  afficherArbreApartirDeNoeud(A->adRacine);
+	afficherTreeApartirDeNode(A->root);
 
 }
 
-void rechercherElementArbre(ElementA e, const Arbre *A, int * trouve, int * nb_visites)
+void 
+search(int e, const Tree * A, int *trouve, int *nb_visites)
 {
-  rechercherElementApartirDeNoeud(e,A->adRacine,trouve,nb_visites);
+	rechercherintpartirDeNode(e, A->root, trouve, nb_visites);
 
 }
 
-void viderArbre(Arbre *A)
+void 
+erase(Tree * A)
 {
-  viderApartirDeNoeud(A->adRacine);
-  A->nbElemDansArbre = 0;
+	viderApartirDeNode(A->root);
+	A->size = 0;
 }
 
-void testamentArbre(Arbre *A)
+void 
+clear(Tree * A)
 {
-  viderArbre(A);
-  A->adRacine = NULL;
+	erase(A);
+	A->root = NULL;
 
 }
 
-int hauteurArbre(const Arbre * A)
+int 
+hauteurTree(const Tree * A)
 {
-  if(A->adRacine != NULL)  return hauteurApartirDeNoeud(A->adRacine);
-  return -1;
+	if (A->root != NULL)
+		return hauteurApartirDeNode(A->root);
+	return -1;
 }

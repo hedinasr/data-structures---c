@@ -45,7 +45,7 @@ static void _deleteLine(Cellule *dummy, SkipList *list) {
     dummy->suivant = foo->suivant;
     if (foo->dessous == NULL) {
       list->size--;
-      list->pack.testament(&(foo->info));
+      list->pack.testament(&(foo->data));
     }
     free(foo);
   }
@@ -75,7 +75,7 @@ void clear(SkipList *list) { _clear(list); }
   Résultat: retourne l'adresse de l'élément inséré.
 */
 static Cellule *insertElemInterne(Object e, Cellule *bidon, const SkipList *l) {
-  if (bidon->suivant && l->pack.compare(e, bidon->suivant->info) >= 0) {
+  if (bidon->suivant && l->pack.compare(e, bidon->suivant->data) >= 0) {
     // Va à droite
     return insertElemInterne(e, bidon->suivant, l);
   } else {
@@ -83,7 +83,7 @@ static Cellule *insertElemInterne(Object e, Cellule *bidon, const SkipList *l) {
     if (bidon->dessous == NULL) {
       Cellule *p = (Cellule *)malloc(sizeof(Cellule));
       /* Chainage sur le dernier niveau ("en tête") */
-      p->info = e;
+      p->data = e;
       p->suivant = bidon->suivant;
       bidon->suivant = p;
       p->dessous = NULL;
@@ -93,7 +93,7 @@ static Cellule *insertElemInterne(Object e, Cellule *bidon, const SkipList *l) {
       Cellule *a = insertElemInterne(e, bidon->dessous, l);
       if (a && rand() % 2 == 0) {
         Cellule *c = (Cellule *)malloc(sizeof(Cellule));
-        c->info = a->info;
+        c->data = a->data;
         c->dessous = a;
         c->suivant = bidon->suivant;
         bidon->suivant = c;
@@ -124,7 +124,7 @@ void push_back(SkipList *l, Object e) {
     l->dummy = bidon;
     p = (Cellule *)malloc(sizeof(Cellule));
     bidon->suivant = p;
-    p->info = c->info;
+    p->data = c->data;
     p->suivant = NULL;
     p->dessous = c;
     c = p;
@@ -145,7 +145,7 @@ print(const SkipList *l) {
     while (foo->dessous != NULL) {
       Cellule *bar = foo->suivant;
       while (bar->suivant != NULL) {
-        l->pack.affiche(bar->info);
+        l->pack.affiche(bar->data);
         bar = bar->suivant;
       }
       foo = foo->dessous;
@@ -157,10 +157,10 @@ print(const SkipList *l) {
 static
 Cellule *
 _searchCell(const SkipList *l, Cellule *bidon, Object e) {
-  if (bidon->suivant && l->pack.compare(e, bidon->suivant->info) == 0) {
+  if (bidon->suivant && l->pack.compare(e, bidon->suivant->data) == 0) {
     return bidon->suivant;
   } else {
-    if (bidon->suivant && l->pack.compare(e, bidon->suivant->info) > 0)
+    if (bidon->suivant && l->pack.compare(e, bidon->suivant->data) > 0)
       return _searchCell(l, bidon->suivant, e);
     if (bidon->dessous)
       return _searchCell(l, bidon->dessous, e);
@@ -175,7 +175,7 @@ Cellule *search(const SkipList *l, Object e) {
 static void _deleteCell(SkipList *l, Cellule *bidon, Object e) {
   Cellule *temp, *st = l->dummy;
   while (bidon->suivant != NULL &&
-         l->pack.compare(e, bidon->suivant->info) == 0) {
+         l->pack.compare(e, bidon->suivant->data) == 0) {
     while (st->dessous != NULL) {
       if (st->suivant == bidon->suivant) {
         if (bidon->suivant->suivant != NULL)
@@ -186,12 +186,12 @@ static void _deleteCell(SkipList *l, Cellule *bidon, Object e) {
     temp = bidon->suivant;
     bidon->suivant = temp->suivant;
 
-    l->pack.testament(&(temp->info));
+    l->pack.testament(&(temp->data));
     if (bidon->dessous != NULL) {
       _deleteCell(l, bidon->dessous, e);
     }
   }
-  if (bidon->suivant != NULL && l->pack.compare(e, bidon->suivant->info) > 0) {
+  if (bidon->suivant != NULL && l->pack.compare(e, bidon->suivant->data) > 0) {
     _deleteCell(l, bidon->suivant, e);
   }
   if (bidon->dessous != NULL) {

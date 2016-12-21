@@ -41,7 +41,7 @@ int at(const DoublyLinkedList *l, unsigned int i) {
     printf("Erreur d'indice\n");
     return -1;
   }
-  return c->info;
+  return c->data;
 }
 
 void update_at(const DoublyLinkedList *l, unsigned int i, int e) {
@@ -55,7 +55,7 @@ void update_at(const DoublyLinkedList *l, unsigned int i, int e) {
   } else {
     printf("Erreur d'indice\n");
   }
-  c->info = e;
+  c->data = e;
 }
 
 Node *begin(const DoublyLinkedList *l) {
@@ -80,7 +80,7 @@ void print_left_right(const DoublyLinkedList *l) {
 
   printf("Affichage de gauche à droite:\n");
   for (i = 0; i < size(l); i++) {
-    printf("Cellule [%d]: %d\n", i, c->info);
+    printf("Cellule [%d]: %d\n", i, c->data);
     c = c->next;
   }
 }
@@ -91,7 +91,7 @@ void print_right_left(const DoublyLinkedList *l) {
 
   printf("Affichage de droite à gauche:\n");
   for (i = size(l) - 1; i >= 0; i--) {
-    printf("Cellule [%d]: %d\n", i, c->info);
+    printf("Cellule [%d]: %d\n", i, c->data);
     c = c->pred;
   }
 }
@@ -104,13 +104,13 @@ void ajouterEnTeteDoublyLinkedList(int e, DoublyLinkedList *l) {
     l->first->pred = NULL;
     l->first->next = NULL;
     l->last = c;
-    c->info = e;
+    c->data = e;
   } else {
     l->first->pred = c;
     c->next = l->first;
     l->first = c;
     c->pred = NULL;
-    c->info = e;
+    c->data = e;
   }
 }
 
@@ -122,13 +122,13 @@ void push_back(int e, DoublyLinkedList *l) {
     l->last->pred = NULL;
     l->last->next = NULL;
     l->first = c;
-    c->info = e;
+    c->data = e;
   } else {
     l->last->next = c;
     c->pred = l->last;
     l->last = c;
     c->next = NULL;
-    c->info = e;
+    c->data = e;
   }
 }
 
@@ -158,7 +158,7 @@ void erase(DoublyLinkedList *l) {
   for (i = 0; i < _size; i++) {
     c = l->first;
     l->first = c->next;
-    printf("Cellule [%d]: %d supprimé.\n", i, c->info);
+    printf("Cellule [%d]: %d supprimé.\n", i, c->data);
     c->pred = NULL;
     c->next = NULL;
     free(c);
