@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "Array.h"
+#include "array.h"
 
 void init(Array *t) {
   t->array = (int *)malloc(sizeof(int));
